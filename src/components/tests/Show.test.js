@@ -3,24 +3,68 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Show from './../Show';
+import Episode from '../Episode';
 
-const testShow = {
-    //add in approprate test data structure here.
+export const testShow = {
+    //add in appropriate test data structure here.
+    name:'',
+    summary:'',
+    seasons: [
+        {
+        id: '1',
+        name: 'Season 1',
+        episodes: []
+        },
+        {
+            id: '2',
+            name: 'Season 2',
+            episodes: []
+        },
+        {
+            id: '3',
+            name: 'Season 3',
+            episodes: []
+        },
+    ]
 }
 
 test('renders testShow and no selected Season without errors', ()=>{
+    render(<Show show={testShow} selectedSeason={'none'} />);
 });
 
 test('renders Loading component when prop show is null', () => {
+    render(<Show show={null} selectedSeason={'none'} />);
+    const loading = screen.getByText(/Fetching data/i);
+    expect(loading).toBeInTheDocument();
 });
 
 test('renders same number of options seasons are passed in', ()=>{
+    render(<Show show={testShow} selectedSeason={'none'} />);
+    const seasons = screen.queryAllByTestId('season-option');
+    // console.log('testing: ', seasons);
+    expect(seasons).toHaveLength(3);
 });
 
 test('handleSelect is called when an season is selected', () => {
+    const fakeFunc = jest.fn();
+    render(<Show show={testShow} selectedSeason={'none'} handleSelect={fakeFunc} />);
+    const selector = screen.getByRole('combobox');
+    const seasons = screen.queryAllByTestId('season-option');
+    userEvent.selectOptions(selector, seasons[2]);
+    expect(fakeFunc).toBeCalledTimes(1);
 });
 
 test('component renders when no seasons are selected and when rerenders with a season passed in', () => {
+    render(<Show show={testShow} selectedSeason={'none'} />);
+    let episode = document.querySelector('.episodes');
+    expect(episode).not.toBeInTheDocument();
+    
+    
+    render(<Show show={testShow} selectedSeason={'1'} />);
+    episode = document.querySelector('.episodes');
+    expect(episode).toBeInTheDocument();
+
+
 });
 
 //Tasks:
