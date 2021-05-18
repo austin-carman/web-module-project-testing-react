@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Show from './../Show';
 import Episode from '../Episode';
 
-const testShow = {
+export const testShow = {
     //add in appropriate test data structure here.
     name:'',
     summary:'',

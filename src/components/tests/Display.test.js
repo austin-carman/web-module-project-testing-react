@@ -1,14 +1,33 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { getByRole, render, screen } from '@testing-library/react';
+import Display from '../Display';
+import { testShow } from '../Show';
+// import "jest-dom/extend-expect";
+
+import userEvent from '@testing-library/user-event';
+import fetchShow from '../../api/fetchShow';
+jest.mock('../../api/fetchShow');
 
 
 test("renders without error", () => {
+    render(<Display />);
 });
 
+test('Show component renders when fetch button is clicked', async () => {
+    render(<Display/>);
+    const button = screen.getByRole('button');    
+    userEvent.click(button);
+    fetchShow.mockResolveValueOnce({testShow});
+    const component = await screen.findByTestId("show-container");
+    expect(component).toBeInTheDocument();
+});
 
+// test('when fetch button is pressed, select options rendered === # of seasons in data', async () => {
+//     render(<Display/>);
+//     const button = screen.getByRole('button');    
+//     userEvent.click(button);
 
-
-
+// });
 
 
 
